@@ -1603,6 +1603,16 @@ Cell.prototype.create = function() {
   if ( isIE8 ) {
     this.element.setAttribute( 'unselectable', 'on' );
   }
+
+  var e = this.element;
+  var proto = this;
+
+  e.setAttribute('tabindex', '0');
+
+  e.addEventListener('focus', function() {
+    proto.parent.select(proto.parent.cells.indexOf(proto));
+  });
+
   this.x = 0;
   this.shift = 0;
 };
@@ -4164,6 +4174,7 @@ PageDots.prototype.addDots = function( count ) {
   while ( count ) {
     var dot = document.createElement('li');
     dot.className = 'dot';
+    dot.setAttribute('aria-label', 'item ' + count);
     fragment.appendChild( dot );
     newDots.push( dot );
     count--;
@@ -4383,7 +4394,8 @@ Player.prototype.visibilityChange = function() {
 // -------------------------- Flickity -------------------------- //
 
 utils.extend( Flickity.defaults, {
-  pauseAutoPlayOnHover: true
+  pauseAutoPlayOnHover: true,
+  pauseAutoPlayOnFocus: true
 });
 
 Flickity.createMethods.push('_createPlayer');
@@ -4402,8 +4414,9 @@ Flickity.prototype.activatePlayer = function() {
     return;
   }
   this.player.play();
-  eventie.bind( this.element, 'mouseenter', this );
-  this.isMouseenterBound = true;
+
+  this.element.addEventListener( 'mouseenter', this );
+  this.element.addEventListener( 'focus', this, true);
 };
 
 // Player API, don't hate the ... thanks I know where the door is
@@ -4446,7 +4459,20 @@ Flickity.prototype.onmouseenter = function() {
 // resume auto-play on hover off
 Flickity.prototype.onmouseleave = function() {
   this.player.unpause();
-  eventie.unbind( this.element, 'mouseleave', this );
+  this.element.removeEventListener( 'mouseleave', this );
+};
+
+Flickity.prototype.onfocus = function() {
+  if ( !this.options.pauseAutoPlayOnFocus ) {
+    return;
+  }
+  this.player.pause();
+  this.element.addEventListener( 'blur', this, true );
+};
+
+Flickity.prototype.onblur = function() {
+  this.player.unpause();
+  this.element.removeEventListener( 'blur', this, true );
 };
 
 // -----  ----- //

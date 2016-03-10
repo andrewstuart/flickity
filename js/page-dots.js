@@ -95,6 +95,7 @@ PageDots.prototype.addDots = function( count ) {
   while ( count ) {
     var dot = document.createElement('li');
     dot.className = 'dot';
+    dot.setAttribute('aria-label', 'item ' + count);
     fragment.appendChild( dot );
     newDots.push( dot );
     count--;

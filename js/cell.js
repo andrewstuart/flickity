@@ -43,6 +43,16 @@ Cell.prototype.create = function() {
   if ( isIE8 ) {
     this.element.setAttribute( 'unselectable', 'on' );
   }
+
+  var e = this.element;
+  var proto = this;
+
+  e.setAttribute('tabindex', '0');
+
+  e.addEventListener('focus', function() {
+    proto.parent.select(proto.parent.cells.indexOf(proto));
+  });
+
   this.x = 0;
   this.shift = 0;
 };
