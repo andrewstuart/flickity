@@ -45,13 +45,15 @@ Cell.prototype.create = function() {
   }
 
   var e = this.element;
-  var proto = this;
+  var p = this.parent;
+  var idx = p.cells.indexOf(this);
 
   e.setAttribute('tabindex', '0');
+  e.setAttribute('aria-label', 'item ' + idx+1);
 
-  e.addEventListener('focus', function() {
-    proto.parent.select(proto.parent.cells.indexOf(proto));
-  });
+  // e.addEventListener('focus', function() {
+  //   p.select(idx);
+  // });
 
   this.x = 0;
   this.shift = 0;

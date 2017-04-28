@@ -1605,12 +1605,14 @@ Cell.prototype.create = function() {
   }
 
   var e = this.element;
-  var proto = this;
+  var p = this.parent;
+  var idx = $(e).index();
 
   e.setAttribute('tabindex', '0');
+  e.setAttribute('aria-label', 'item ' + idx+1);
 
   e.addEventListener('focus', function() {
-    proto.parent.select(proto.parent.cells.indexOf(proto));
+    p.select(idx);
   });
 
   this.x = 0;
