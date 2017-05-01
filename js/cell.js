@@ -48,9 +48,6 @@ Cell.prototype.create = function() {
   var p = this.parent;
   var idx = $(e).index();
 
-  e.setAttribute('tabindex', '0');
-  e.setAttribute('aria-label', 'item ' + idx+1);
-
   e.addEventListener('focus', function() {
     p.select(idx);
   });
